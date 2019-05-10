@@ -12,6 +12,8 @@
 
     <!-- Error messages-->
     <string name="detail_error_message">Sandwich data not available</string>
+    <!-- If some details of sandwich data not available then this message will be displayed.[CHAR-NO LIMIT]-->
+    <string name="data_not_available">Data not available</string>
 
     <string-array name="sandwich_names">
         <item>Ham and cheese sandwich</item>

@@ -2,13 +2,17 @@ package com.udacity.sandwichclub;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
+
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 import com.udacity.sandwichclub.model.Sandwich;
 import com.udacity.sandwichclub.utils.JsonUtils;
+
+import java.util.List;
 
 public class DetailActivity extends AppCompatActivity {
 
@@ -25,6 +29,7 @@ public class DetailActivity extends AppCompatActivity {
         Intent intent = getIntent();
         if (intent == null) {
             closeOnError();
+            return;
         }
 
         int position = intent.getIntExtra(EXTRA_POSITION, DEFAULT_POSITION);
@@ -43,7 +48,7 @@ public class DetailActivity extends AppCompatActivity {
             return;
         }
 
-        populateUI();
+        populateUI(sandwich);
         Picasso.with(this)
                 .load(sandwich.getImage())
                 .into(ingredientsIv);
@@ -56,7 +61,55 @@ public class DetailActivity extends AppCompatActivity {
         Toast.makeText(this, R.string.detail_error_message, Toast.LENGTH_SHORT).show();
     }
 
-    private void populateUI() {
+    /**
+     * @param sandwich Details of sandwich item clicked
+     */
+    private void populateUI(Sandwich sandwich) {
+        TextView alsoKnownTextView = (TextView) findViewById(R.id.also_known_tv);
+        TextView ingredientsTextView = (TextView) findViewById(R.id.ingredients_tv);
+        TextView originTextView = (TextView) findViewById(R.id.origin_tv);
+        TextView descriptionTextView = (TextView) findViewById(R.id.description_tv);
 
+        List<String> list = sandwich.getAlsoKnownAs();
+        int listSize = list.size();
+        for (int i = 0; i < listSize; i++) {
+            if (i == listSize - 1)
+                alsoKnownTextView.append(list.get(i));
+            else
+                alsoKnownTextView.append(list.get(i) + ", ");
+        }
+        if (listSize == 0) {
+            alsoKnownTextView.setText(R.string.data_not_available);
+        }
+
+
+        list.clear();
+        list = sandwich.getIngredients();
+        listSize = list.size();
+        for (int i = 0; i < listSize; i++) {
+            if (i == listSize - 1)
+                ingredientsTextView.append(list.get(i));
+            else
+                ingredientsTextView.append(list.get(i) + ", ");
+        }
+        if (listSize == 0) {
+            ingredientsTextView.setText(R.string.data_not_available);
+        }
+
+
+        String placeOfOrigin = sandwich.getPlaceOfOrigin();
+        if (placeOfOrigin.isEmpty()) {
+            originTextView.setText(R.string.data_not_available);
+        } else {
+            originTextView.setText(sandwich.getPlaceOfOrigin());
+        }
+
+
+        String description = sandwich.getDescription();
+        if (description.isEmpty()) {
+            descriptionTextView.setText(R.string.data_not_available);
+        } else {
+            descriptionTextView.setText(sandwich.getDescription());
+        }
     }
 }
